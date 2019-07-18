@@ -23,8 +23,16 @@ crypto_fullprice_array = page.xpath('//*[@id]/td[5]/a')
 
 
 # conservation des prix
-crypto_price_array = crypto_fullprice_array.map { |price| price.text  }
+crypto_price_array = crypto_fullprice_array.map { |price| price.text}
 	#puts crypto_price_array
+
+
+# Pour convertir en float
+#crypto_price_array.collect do |value| 
+ # value.to_f 
+#end
+#puts crypto_price_array[0].class
+
 
 
 #Création de l'array final (contenant les hashes)
@@ -37,4 +45,4 @@ result = { symbol => crypto_price_array[crypto_name_array.index(symbol)] }
 
   end
 
-  puts crypto_array
+  puts crypto_array#[0]
