@@ -6,74 +6,106 @@ require 'open-uri'
 
 Dotenv.load('.env')
 
+
 #definition de la méthode
 def get_townhall_email(town_hall_url)
 
-page_1 = Nokogiri::HTML(open("#{town_hall_url}"))
-#("https://www.annuaire-des-mairies.com/95/avernes.html"))   
-#puts page.class   # => Nokogiri::HTML::Document
-	
-	#téléchargement de l'ensemble des symboles
-full_email_mairie = page_1.xpath('/html/body/div/main/section[2]/div/table/tbody/tr[4]/td[2]')
+	page_1 = Nokogiri::HTML(open("#{town_hall_url}"))
+	#("https://www.annuaire-des-mairies.com/95/avernes.html"))   
+	#puts page.class   # => Nokogiri::HTML::Document
+		
+		#téléchargement de l'ensemble des symboles
+	full_email_mairie = page_1.xpath('/html/body/div/main/section[2]/div/table/tbody/tr[4]/td[2]')
 
-email_mairie = full_email_mairie.text
-return email_mairie
+	email_mairie = full_email_mairie.text
+	return email_mairie
 
 end
 
 
-def get_townhall_urls
+def get_url_data
+ 
+	page_2 = Nokogiri::HTML(open("http://annuaire-des-mairies.com/val-d-oise.html"))
+	#("https://www.annuaire-des-mairies.com/95/avernes.html"))   
+	#puts page.class   # => Nokogiri::HTML::Document
+		
+		#téléchargement de l'ensemble des symboles
+	half_url = page_2.xpath('//a[contains(@href, "./95/")]')
+
+ end 
+
+
+
+
+def get_townhall_urls(half_url)
 	
 
-page_2 = Nokogiri::HTML(open("http://annuaire-des-mairies.com/val-d-oise.html"))
-#("https://www.annuaire-des-mairies.com/95/avernes.html"))   
-#puts page.class   # => Nokogiri::HTML::Document
+	slice_url = half_url.map { |link| link['href'] }
+	slice_url.each do |i|
+		i.slice!(0) 
+	end
 	
-	#téléchargement de l'ensemble des symboles
-half_url = page_2.xpath('//a[contains(@href, "./95/")]')
-ville = half_url.map { |string| string.text  }
+	town_hall_url = slice_url.map { |j| "http://annuaire-des-mairies.com#{j}"}
+	return town_hall_url
 
+end
+
+
+def city(half_url)
+	
+	town = half_url.map { |string| string.text  }
 	#puts name_mairie
 
+	return town
 
-slice_url = half_url.map { |url| url['href'] }
-slice_url.each do |i|
-	i.slice!(0) 
 end
+
+
+
+def mailing_list(town_hall_url,town)
+
+	email_list = []
+
+	town_hall_url.each do |i|
+	email_mairie = get_townhall_email(i)
+	email_list << email_mairie
+	end
+
+	annuaire = []
+	town.each do |j|
+	result = { j => email_list[town.index(j)]}
+	annuaire << result
 	
-town_hall_url = slice_url.map { |j| "http://annuaire-des-mairies.com#{j}"}
-return town_hall_url
+	end
+	puts annuaire
 
 end
 
-def mailing_list
-page_2 = Nokogiri::HTML(open("http://annuaire-des-mairies.com/val-d-oise.html"))
-#("https://www.annuaire-des-mairies.com/95/avernes.html"))   
-#puts page.class   # => Nokogiri::HTML::Document
+
+
+def perform
 	
-	#téléchargement de l'ensemble des symboles
-half_url = page_2.xpath('//a[contains(@href, "./95/")]')
-ville = half_url.map { |string| string.text  }
+	half_url = get_url_data
 
-town_hall_url = get_townhall_urls
+	town_hall_url = get_townhall_urls(half_url)
 
-email_list = []
+	town = city(half_url)
 
-town_hall_url.each do |i|
-email_mairie = get_townhall_email(i)
-email_list << email_mairie
-end
 
-annuaire = []
-ville.each do |j|
-result = { j => email_list[ville.index(j)]}
-annuaire << result
-puts annuaire
-end
+	annuaire = mailing_list(town_hall_url,town)
+
+
+	
 
 end
 
-mailing_list
+
+perform
+
+
+
+
+
 #def perform
 #	town_hall_url = get_townhall_urls
 #	town_hall_url.each do |town_hall_url|	
