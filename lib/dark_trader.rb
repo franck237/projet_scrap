@@ -9,16 +9,25 @@ Dotenv.load('.env')
 page = Nokogiri::HTML(open("https://coinmarketcap.com/all/views/all/"))   
 #puts page.class   # => Nokogiri::HTML::Document
 
+
+#téléchargement de l'ensemble des symboles
 crypto_fullname_array = page.xpath('//*[@id]/td[3]')
 
+
+# conservation du texte
 crypto_name_array = crypto_fullname_array.map { |string| string.text  }
 	#puts crypto_name_array[0]
 
+#Téléchargement de l'ensemble des prix
 crypto_fullprice_array = page.xpath('//*[@id]/td[5]/a')
 
+
+# conservation des prix
 crypto_price_array = crypto_fullprice_array.map { |price| price.text  }
 	#puts crypto_price_array
 
+
+#Création de l'array final (contenant les hashes)
 crypto_array = []
 
 crypto_name_array.each do |symbol|
@@ -28,23 +37,4 @@ result = { symbol => crypto_price_array[crypto_name_array.index(symbol)] }
 
   end
 
-  puts crypto_array[0]
-
-
-
-#result = Hash.new
-
-#result = Hash[(0...crypto_name_array.size).zip crypto_name_array]
-
-#puts result
-
-#result.each do 
-
-#XPath Symbol Bitcooin
-#//*[@id="id-bitcoin"]/td[3]
-
-#XPath Symbol EOS
-#//*[@id="id-eos"]/td[3]
-
-#XPath Prix EOS
-#//*[@id="id-eos"]/td[5]/a
+  puts crypto_array
