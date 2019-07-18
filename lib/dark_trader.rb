@@ -7,19 +7,38 @@ require 'open-uri'
 Dotenv.load('.env')
 
 page = Nokogiri::HTML(open("https://coinmarketcap.com/all/views/all/"))   
-puts page.class   # => Nokogiri::HTML::Document
+#puts page.class   # => Nokogiri::HTML::Document
 
 crypto_fullname_array = page.xpath('//*[@id]/td[3]')
 
 crypto_name_array = crypto_fullname_array.map { |string| string.text  }
 	#puts crypto_name_array[0]
 
-crypto_fullprice_array = page.xpath('//*[@id]/td[5]')
+crypto_fullprice_array = page.xpath('//*[@id]/td[5]/a')
 
 crypto_price_array = crypto_fullprice_array.map { |price| price.text  }
-	puts crypto_price_array
+	#puts crypto_price_array
+
+crypto_array = []
+
+crypto_name_array.each do |symbol|
+
+result = { symbol => crypto_price_array[crypto_name_array.index(symbol)] }
+    crypto_array << result
+
+  end
+
+  puts crypto_array[0]
 
 
+
+#result = Hash.new
+
+#result = Hash[(0...crypto_name_array.size).zip crypto_name_array]
+
+#puts result
+
+#result.each do 
 
 #XPath Symbol Bitcooin
 #//*[@id="id-bitcoin"]/td[3]
