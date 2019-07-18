@@ -9,7 +9,7 @@ Dotenv.load('.env')
 def get_data
 
 	page = Nokogiri::HTML(open("https://coinmarketcap.com/all/views/all/"))   
-	#puts page.class   # => Nokogiri::HTML::Document
+
 
 end
 
@@ -22,7 +22,7 @@ def extraction_symbol(page)
 
 	# conservation du texte
 	crypto_name_array = crypto_fullname_array.map { |string| string.text  }
-		#puts crypto_name_array[0]
+	
 
 	return crypto_name_array
 
@@ -37,7 +37,7 @@ def extraction_price(page)
 
 	# conservation des prix
 	crypto_price_array = crypto_fullprice_array.map { |price| price.text  }
-		#puts crypto_price_array
+		
 
 	return crypto_price_array
 
@@ -56,7 +56,8 @@ def crypto(crypto_name_array, crypto_price_array)
 	    crypto_array << result
 
 	 end
-	  puts crypto_array
+
+	  return crypto_array
 
 end
 
@@ -69,10 +70,12 @@ def perform
 	crypto_price_array = extraction_price(page)
 	extraction_price(page)
 	extraction_symbol(page)
-	crypto(crypto_name_array,crypto_price_array)
+	crypto_array = crypto(crypto_name_array,crypto_price_array)
 	
+	puts  "Vous avez collectés #{crypto_array.size} entrées"
 
-
+	
+	puts crypto_array
 end
 
 perform
