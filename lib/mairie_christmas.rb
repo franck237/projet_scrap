@@ -7,11 +7,14 @@ require 'open-uri'
 Dotenv.load('.env')
 
 
-
+#definition de la méthode
 def get_townhall_email(town_hall_url)
 
 	page_1 = Nokogiri::HTML(open("#{town_hall_url}"))
-
+	#("https://www.annuaire-des-mairies.com/95/avernes.html"))   
+	#puts page.class   # => Nokogiri::HTML::Document
+		
+		#téléchargement de l'ensemble des symboles
 	full_email_mairie = page_1.xpath('/html/body/div/main/section[2]/div/table/tbody/tr[4]/td[2]')
 
 	email_mairie = full_email_mairie.text
@@ -23,9 +26,10 @@ end
 def get_url_data
  
 	page_2 = Nokogiri::HTML(open("http://annuaire-des-mairies.com/val-d-oise.html"))
-
+	#("https://www.annuaire-des-mairies.com/95/avernes.html"))   
+	#puts page.class   # => Nokogiri::HTML::Document
 		
-	
+		#téléchargement de l'ensemble des symboles
 	half_url = page_2.xpath('//a[contains(@href, "./95/")]')
 
  end 
@@ -50,7 +54,7 @@ end
 def city(half_url)
 	
 	town = half_url.map { |string| string.text  }
-	
+	#puts name_mairie
 
 	return town
 
@@ -73,7 +77,7 @@ def mailing_list(town_hall_url,town)
 	annuaire << result
 	
 	end
-	
+	puts annuaire
 
 end
 
@@ -90,11 +94,13 @@ def perform
 
 	annuaire = mailing_list(town_hall_url,town)
 
+
 	
-	return annuaire
 
 end
 
 
 perform
+
+
 
