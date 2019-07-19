@@ -90,11 +90,8 @@ def perform
 
 	annuaire = mailing_list(town_hall_url,town)
 
-	puts  "Vous avez collectés #{annuaire.size} entrées"
-
-	puts annuaire [0..3]
-
 	
+	return annuaire
 
 end
 
