@@ -75,7 +75,7 @@ def perform
 	puts  "Vous avez collectés #{crypto_array.size} entrées"
 
 	
-	puts crypto_array
+	crypto_array
 end
 
 perform
