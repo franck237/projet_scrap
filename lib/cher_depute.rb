@@ -31,68 +31,67 @@ def get_url_data
 		
 		#téléchargement de l'ensemble des emails
 	half_url = page_2.xpath('//a[contains(@href, "fiche")]')
+	return half_url
 
  end 
 
 
 
-def get_deputy_urls#(half_url)
+def get_deputy_urls(half_url)
 	
 
-page_2 = Nokogiri::HTML(open("http://www2.assemblee-nationale.fr/deputes/liste/tableau"))
+#page_2 = Nokogiri::HTML(open("http://www2.assemblee-nationale.fr/deputes/liste/tableau"))
 	#("https://www.annuaire-des-mairies.com/95/avernes.html"))   
 	#puts page_2.class   # => Nokogiri::HTML::Document
 		
 		#téléchargement de l'ensemble des emails
-	half_url = page_2.xpath('//a[contains(@href, "fiche")]')
+	#half_url = page_2.xpath('//a[contains(@href, "fiche")]')
 
 
 
 	slice_url = half_url.map { |link| link['href'] }
-	slice_url.each do |i|
-		i.slice!(7) 
-	end
-	puts slice_url
-
-
-
-
-
 	
-	deputy_url = slice_url.map { |j| "http://www2.assemblee-nationale.fr/deputes#{j}"}
-	return deputy_url
 
+	deputy_url = slice_url.map { |j| "http://www2.assemblee-nationale.fr#{j}"}
+	
+	return deputy_url
 end
 
-get_deputy_urls
 
-def city(half_url)
+def entire_name(half_url)
+
+	#page_2 = Nokogiri::HTML(open("http://www2.assemblee-nationale.fr/deputes/liste/tableau"))
+	#("https://www.annuaire-des-mairies.com/95/avernes.html"))   
+	#puts page_2.class   # => Nokogiri::HTML::Document
+		
+		#téléchargement de l'ensemble des emails
+	#half_url = page_2.xpath('//a[contains(@href, "fiche")]')
+
 	
-	town = half_url.map { |string| string.text  }
+	all_name = half_url.map { |string| string.text  }
 	#puts name_mairie
 
-	return town
+	return all_name
 
 end
 
 
-
-def mailing_list(town_hall_url,town)
+def mailing_list(deputy_url,all_name)
 
 	email_list = []
 
-	town_hall_url.each do |i|
-	email_mairie = get_townhall_email(i)
-	email_list << email_mairie
+	deputy_url.each do |i|
+	deputy_email = get_deputy_email(i)
+	email_list << deputy_email
 	end
 
 	annuaire = []
-	town.each do |j|
-	result = { j => email_list[town.index(j)]}
+	all_name.each do |j|
+	result = { j => email_list[all_name.index(j)]}
 	annuaire << result
 	
 	end
-	puts annuaire
+
 
 end
 
@@ -102,11 +101,12 @@ def perform
 	
 	half_url = get_url_data
 
-	town_hall_url = get_townhall_urls(half_url)
+	deputy_url = get_deputy_urls(half_url)
 
-	town = city(half_url)
+	all_name = entire_name(half_url)
 
-	annuaire = mailing_list(town_hall_url,town)	
+	annuaire = mailing_list(deputy_url,all_name)	
+	puts annuaire
 
 end
 
